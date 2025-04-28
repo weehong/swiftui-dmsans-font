@@ -1,0 +1,34 @@
+// swiftlint:disable all
+// Generated using SwiftGen — https://github.com/SwiftGen/SwiftGen
+
+{% if families %}
+{% set accessModifier %}{% if param.publicAccess %}public{% else %}internal{% endif %}{% endset %}
+import SwiftUI
+
+// MARK: - Fonts
+
+// swiftlint:disable superfluous_disable_command file_length empty_count
+{{accessModifier}} enum {{param.enumName|default:"FontFamily"}} {
+  {% for family in families %}
+  {{accessModifier}} enum {{family.name|replace:" ",""|escapeReservedKeywords}} {
+    {% for font in family.fonts %}
+    {{accessModifier}} static let {{font.style|replace:" ",""|escapeReservedKeywords}} = FontConvertible(name: "{{font.name}}", family: "{{family.name}}", path: "{{font.path}}")
+    {% endfor %}
+    {{accessModifier}} static let all: [FontConvertible] = [{% for font in family.fonts %}{{font.style|replace:" ",""|escapeReservedKeywords}}{{ ", " if not forloop.last }}{% endfor %}]
+  }
+  {% endfor %}
+  {{accessModifier}} static let allCustomFonts: [FontConvertible] = [{% for family in families %}{% for font in family.fonts %}{{family.name|replace:" ",""|escapeReservedKeywords}}.{{font.style|replace:" ",""|escapeReservedKeywords}}{{ ", " if not forloop.last }}{% endfor %}{{ ", " if not forloop.last }}{% endfor %}]
+}
+
+// MARK: - Implementation Details
+
+{{accessModifier}} struct FontConvertible: Sendable {
+  {{accessModifier}} let name: String
+  {{accessModifier}} let family: String
+  {{accessModifier}} let path: String
+
+  {{accessModifier}} func font(size: CGFloat) -> SwiftUI.Font {
+    SwiftUI.Font.custom(name, size: size)
+  }
+}
+{% endif %}

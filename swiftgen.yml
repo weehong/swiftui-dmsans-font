@@ -1,0 +1,8 @@
+fonts:
+  inputs: Sources/DMSansFontPackage/Resources/Fonts
+  outputs:
+    templatePath: Templates/fonts-template.stencil
+    output: Sources/DMSansFontPackage/Generated/Fonts.swift
+    params:
+      publicAccess: true
+      enumName: "DMSansFonts"
